@@ -40,7 +40,7 @@
             {{tab}}
           </li>
         </ul>
-        <ul v-if="selectedTab === tabs[0]">
+        <div v-if="selectedTab === tabs[0]">
           <div v-if="keywords.length">
             <ul class="list">
               <li v-for="(item, idx) in keywords" v-bind:key="idx" v-on:click="onClickKeyword(item.keyword)">
@@ -52,9 +52,23 @@
           <div v-else>
             추천 검색어가 없습니다.
           </div>
-        </ul>
-        <ul v-else>
-          최근 검색어 목록
+        </div>
+        <div v-else>
+          <div v-if="history.length">
+            <ul class="list">
+              <li v-for="(item, idx) in history" v-bind:key="idx" v-on:click="onClickHistory(item.keyword)">
+                <span class="number">
+                  {{ idx + 1 }}
+                </span>
+                {{item.keyword}}
+                <span class="date">{{ item.date }}</span>
+                <button class="btn-remove" v-on:click.stop="onClickRemoveHistory(item.keyword)"></button>
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            최근 검색어가 없습니다.
+          </div>
         </ul>
       </div>
     </div>
