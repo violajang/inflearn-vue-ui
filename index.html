@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,73 +7,77 @@
   <title>MVC with Vanilla.JS</title>
   <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
   <div id="app">
-
     <header>
       <h2 class="container">검색</h2>
     </header>
 
     <div class="container">
-      <form v-on:submit.prevent="onSubmit">
-        <input v-on:keyup="onKeyup" v-model="query" type="text" placeholder="검색어를 입력하세요" autofocus>
-        <button v-on:click="onReset" v-show="query.length" type="reset" class="btn-reset"></button>
-      </form>
+      <search-form v-bind:value="query" v-on:@submit="onSubmit" v-on:@reset="onReset"></search-form>
 
-      <div v-if="submitted">
-        <div v-if="searchResult.length">
-          <ul>
-            <li v-for="item in searchResult">
-              {{ item.name }}
+      <div class="content">
+        <div v-if="submitted">
+          <div v-if="searchResult.length">
+            <ul>
+              <li v-for="item in searchResult">
+                <img v-bind:src="item.image"> {{item.name}}
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            {{query}} 검색어로 찾을수 없습니다 
+          </div>
+        </div>
+        <div v-else>
+          <ul class="tabs">
+            <li v-for="tab in tabs" v-bind:class="{active: tab === selectedTab}"
+            v-on:click="onClickTab(tab)">
+              {{tab}}
             </li>
           </ul>
-        </div>
-        <div v-else>
-          {{query}} 검색어로 찾을 수 없습니다.
-        </div>
-      </div>
-      <div v-else>
-        <ul class="tabs">
-          <li v-for="tab in tabs" v-on:click="onClickTab(tab)" v-bind:class="{active: tab === selectedTab}">
-            {{tab}}
-          </li>
-        </ul>
-        <div v-if="selectedTab === tabs[0]">
-          <div v-if="keywords.length">
-            <ul class="list">
-              <li v-for="(item, idx) in keywords" v-bind:key="idx" v-on:click="onClickKeyword(item.keyword)">
-                <span class="number">{{idx + 1}}</span>
-                {{item.keyword}}
-              </li>
-            </ul>
+
+          <div v-if="selectedTab === tabs[0]">
+            <div v-if="keywords.length">
+              <ul class="list">
+                <li v-for="(item, index) in keywords" 
+                    v-on:click="onClickKeyword(item.keyword)">
+                  <span class="number">{{index + 1}}</span> {{item.keyword}}
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              추천 검색어가 없습니다
+            </div>
           </div>
           <div v-else>
-            추천 검색어가 없습니다.
+            <div v-if="history.length">
+              <ul class="list">
+                <li v-for="item in history" 
+                    v-on:click="onClickKeyword(item.keyword)">
+                  {{item.keyword}}
+                  <span class="date">{{item.date}}</span>
+                  <button class="btn-remove" 
+                    v-on:click.stop="onClickRemoveHistory(item.keyword)"></button>
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              최근 검색어가 없습니다 
+            </div>
           </div>
         </div>
-        <div v-else>
-          <div v-if="history.length">
-            <ul class="list">
-              <li v-for="(item, idx) in history" v-bind:key="idx" v-on:click="onClickHistory(item.keyword)">
-                <span class="number">
-                  {{ idx + 1 }}
-                </span>
-                {{item.keyword}}
-                <span class="date">{{ item.date }}</span>
-                <button class="btn-remove" v-on:click.stop="onClickRemoveHistory(item.keyword)"></button>
-              </li>
-            </ul>
-          </div>
-          <div v-else>
-            최근 검색어가 없습니다.
-          </div>
-        </ul>
       </div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue"></script>
   <script type="module" src="./js/app.js"></script>
 </body>
-
 </html>
+
+<template id="search-form">
+  <form v-on:submit.prevent="onSubmit">
+    <input type="text" v-model="inputValue" v-on:keyup="onKeyup" placeholder="검색어를 입력하세요" autofocus>
+    <button v-show="inputValue.length" v-on:click="onReset" type="reset" class="btn-reset"></button>
+  </form>  
+</template>
