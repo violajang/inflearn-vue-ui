@@ -23,11 +23,7 @@
           <search-result v-bind:data="searchResult" v-bind:query="query"></search-result>
         </div>
         <div v-else>
-          <ul class="tabs">
-            <li v-for="tab in tabs" v-bind:class="{active: tab === selectedTab}" v-on:click="onClickTab(tab)">
-              {{tab}}
-            </li>
-          </ul>
+          <Tabs v-bind:tabs="tabs" v-bind:selected-tab="selectedTab" v-on:@change="onClickTab"></Tabs>
 
           <div v-if="selectedTab === tabs[0]">
             <list v-bind:data="keywords" type="keywords" v-on:@click="onClickKeyword"></list>
@@ -53,7 +49,6 @@
 </template>
 
 <template id="search-result">
-
   <div v-if="data.length">
     <ul>
       <li v-for="item in data">
@@ -70,14 +65,22 @@
   <div v-if="data.length">
     <ul class="list">
       <li v-for="(item, index) in data" v-on:click="onClickList(item.keyword)">
-        <span v-if="type === 'keywords'"  class="number">{{index + 1}}</span>
+        <span v-if="keywordType"  class="number">{{index + 1}}</span>
         {{item.keyword}}
-        <span v-if="type === 'history'" class="date">{{item.date}}</span>
-        <button v-if="type === 'history'" class="btn-remove" v-on:click.stop="onRemoveList(item.keyword)"></button>
+        <span v-if="historyType" class="date">{{item.date}}</span>
+        <button v-if="historyType" class="btn-remove" v-on:click.stop="onRemoveList(item.keyword)"></button>
       </li>
     </ul>
   </div>
   <div v-else>
     추천 검색어가 없습니다
   </div>
+</template>
+
+<template id="tabs">
+  <ul class="tabs">
+    <li v-for="tab in tabs" v-bind:class="{active: tab === selectedTab}" v-on:click="onClickTab(tab)">
+      {{tab}}
+    </li>
+  </ul>
 </template>

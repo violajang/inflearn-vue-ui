@@ -5,6 +5,7 @@ import HistoryModel from './models/HistoryModel.js'
 import FormComponent from './components/FormComponents.js'
 import SearchResult from './components/SearchResult.js'
 import ListComponent from './components/ListComponent.js'
+import TabComponent from './components/TabComponent.js'
 
 new Vue({
   el: '#app',
@@ -20,7 +21,8 @@ new Vue({
   components: {
     'search-form': FormComponent,
     'search-result': SearchResult,
-    'list' : ListComponent
+    'list' : ListComponent,
+    'tabs': TabComponent
   },
   created(){
       this.selectedTab = this.tabs[0];
